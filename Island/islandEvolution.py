@@ -213,13 +213,14 @@ if __name__ == '__main__':
   epochNum = int(raw_input("Please enter the length of each epoch: "))
   migrantCount = int(raw_input("Please enter the number of migrants for each epoch: "))
   arity  = int(raw_input("Please enter the arity of the constellation: "))
+  runs = int(raw_input("Please enter the number of runs: "))
 
 
   runname = "ESIsland_" + str(raw_input("Please enter the name of run: "))
   logPath = runname + '/'
   #evolution = IslandEvolution(islandCount, logPath)
 
-  for gen in range(0, 10):
+  for gen in range(0, runs):
 	logPath2 = logPath + "r" + str(gen) + "/"
 	evolution = IslandEvolution(islandCount, logPath2)
 	evolution.evolve(popSize, epochNum, numgen, arity, migrantCount)

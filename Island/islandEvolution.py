@@ -11,6 +11,7 @@ class IslandEvolution(object):
       self.runArity = 0
       self.runGenMax = 0
       self.runPopSize = 0
+      self.runElites = 0
       self.epochNum = 0
       self.logPath = logPath
       self.logFile = ""
@@ -21,13 +22,14 @@ class IslandEvolution(object):
       self.migrantCount = 0
 
     # Computes a single run with a given population size and an epoch of a given number of generations
-    def evolve(self, popSize, epochNum, genMax, arity, migrantCount):
+    def evolve(self, popSize, epochNum, genMax, arity, migrantCount, elites):
       self.runCount += 1
       self.runArity = arity
       self.runGenMax = genMax
       self.runPopSize = popSize
       self.runEpochNum = epochNum
       self.migrantCount = migrantCount
+      self.runElites = elites
 
       self.logInfo()
 
@@ -43,7 +45,7 @@ class IslandEvolution(object):
         for index, island in enumerate(islands):
 
 
-          newpop = self.stdMutation(island, 0, gen)
+          newpop = self.stdMutation(island, 0, gen, elites)
           newpop = self.stdCrossover(newpop, 0.5)
 
           self.stdFitness(newpop)
@@ -108,10 +110,11 @@ class IslandEvolution(object):
 
 
     # Performs mutation on the population
-    def stdMutation(self, population, mean, gen):
+    def stdMutation(self, population, mean, gen, elites):
       children = []
       learningRate = 1.0/np.sqrt(gen+1)
-      for index in range(0, self.runPopSize*5):
+      children.extend(sorted(population, key=lambda x: x.fitness)[:elites])
+      for index in range(0, self.runPopSize*5-elites):
         parentIndex = np.random.randint(0,len(population))
         parent = population[parentIndex]
         
@@ -164,6 +167,7 @@ class IslandEvolution(object):
       self.logFile.write("Number of Islands = %s\n" % self.islandCount)
       self.logFile.write("Length of each epoch = %s\n" % self.epochNum)
       self.logFile.write("Number of migrants = %s\n" % self.migrantCount)
+      self.logFile.write("Number of elites = %s\n" % self.runElites)
     
     def logData(self, islands):
       meanFitness = 0
@@ -212,9 +216,9 @@ if __name__ == '__main__':
   islandCount = int(raw_input("Please enter the number of islands: "))
   epochNum = int(raw_input("Please enter the length of each epoch: "))
   migrantCount = int(raw_input("Please enter the number of migrants for each epoch: "))
+  elites = int(raw_input("Please enter the number of elites: "))
   arity  = int(raw_input("Please enter the arity of the constellation: "))
   runs = int(raw_input("Please enter the number of runs: "))
-
 
   runname = "ESIsland_" + str(raw_input("Please enter the name of run: "))
   logPath = runname + '/'
@@ -223,4 +227,4 @@ if __name__ == '__main__':
   for gen in range(0, runs):
 	logPath2 = logPath + "r" + str(gen) + "/"
 	evolution = IslandEvolution(islandCount, logPath2)
-	evolution.evolve(popSize, epochNum, numgen, arity, migrantCount)
+	evolution.evolve(popSize, epochNum, numgen, arity, migrantCount, elites)

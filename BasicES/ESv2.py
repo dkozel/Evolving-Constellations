@@ -6,6 +6,8 @@ import os
 
 numgen = int(raw_input("Please enter the number of generations: "))
 arity = int(raw_input("Please enter the arity of the constellation: "))
+noise_level = float(raw_input("Please enter the desired noise level: "))
+
 arity_x2 = arity*2
 #runname = "ES_" + str(raw_input("Please enter the name of run: "))
 #rundir = runname + '/'
@@ -36,7 +38,7 @@ def fitnessfunction(individual):
 
 	tb = gnuradio.channel_model(constellation)
 
-	tb.set_noise_level(0.4)
+	tb.set_noise_level(noise_level)
 	tb.run()
 	#ber = beraw.BERAWGNSimu(5)
 	#ber.run()

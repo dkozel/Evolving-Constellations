@@ -1,7 +1,7 @@
 from random import *
 import numpy as np
 import matplotlib.pyplot as pyplot
-import top_block as gnuradio
+import channel_model as gnuradio
 import multiprocessing as multip
 import ctypes
 import os
@@ -48,7 +48,7 @@ def fitnessfunction(individual):
 	for x in range(0, len(individual),2):
 		constellation[x/2] = complex(individual[x], individual[x+1])
 
-	tb = gnuradio.top_block(constellation)
+	tb = gnuradio.channel_model(constellation)
 
 	tb.set_noise_level(0.4)
 	tb.run()

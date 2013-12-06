@@ -1,7 +1,7 @@
 from random import *
 import numpy as np
 import matplotlib.pyplot as pyplot
-import top_block as gnuradio
+import channel_model as gnuradio
 import os
 
 class IslandEvolution(object):
@@ -139,7 +139,7 @@ class IslandEvolution(object):
         for x in range(0, len(indiv.genotype), 2):
           constellation[x/2] = complex(indiv.genotype[x], indiv.genotype[x+1])
 
-        tb = gnuradio.top_block(constellation)
+        tb = gnuradio.channel_model(constellation)
         tb.set_noise_level(0.4)
         tb.run()
 

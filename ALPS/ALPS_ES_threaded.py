@@ -301,6 +301,7 @@ if __name__ == '__main__':
 	
 	runname = "ALPS_arity" +str(arity) + "_" + str(numgen) +"g" + str(raw_input("Please enter anything else you would like in the name: "))
 	numruns = int(raw_input("Please enter the number of runs: "))
+	replace_freq = int(raw_input("How many generations should the bottom be replaced? Min = " + str(agelevels[0]) + ": "))
 	
 	for numrun in range(0, numruns):
 		rundir = runname + '/r' +str(numrun) + '/'
@@ -359,7 +360,7 @@ if __name__ == '__main__':
 					bestfitnesses[l,gen] = levels[l][3][0]
 					saveIndiv(levels[l][0],l)
 			
-			if gen%4 == 0 and len(agelevels) > 1:
+			if gen%replace_freq == 0 and len(agelevels) > 1:
 				indiv = randomUniformPolar(1,(u,arity_x2))
 				stddevs = np.random.normal(mean,stddev,u)
 				ages = 1*np.ones(u)

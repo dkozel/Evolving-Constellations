@@ -1,12 +1,20 @@
 import matplotlib.pyplot as pyplot
 import numpy as np
 import sys
+import Tkinter, tkFileDialog
 
 numislands = 5
 if len(sys.argv) == 1:
-    print "You can also give filename as a command line argument"
-    runname = raw_input("Enter Run Name: ")
-    isMean = int(raw_input("Is it mean or best? 1 for mean and 0 for best: "))
+	print "You can also give filename as a command line argument"
+	root = Tkinter.Tk()
+	root.withdraw()
+	runname = tkFileDialog.askdirectory()
+	print runname
+	#runname = raw_input("Enter Run Name: ")
+	isMean = int(raw_input("Is it mean or best? 1 for mean and 0 for best: "))
+	#root = Tkinter.Tk()
+
+    
 else:
     runname = sys.argv[1]
     isMean = sys.argv[2]

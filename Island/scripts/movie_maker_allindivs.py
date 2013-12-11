@@ -19,8 +19,8 @@ indivs = np.genfromtxt(filename, dtype=float, comments='#', delimiter=', ')
 print indivs
 arity_x2 = len(indivs[0])
 
-imag_values = indivs[:,range(0,arity_x2,2)]
-real_values = indivs[:,range(1,arity_x2,2)]
+imag_values = indivs[:,range(1,arity_x2,2)]
+real_values = indivs[:,range(0,arity_x2,2)]
 print imag_values
 
 # Normalize the points such that the average norm is 1. This is done in GNURadio as well, so it is a realistic depiction. 

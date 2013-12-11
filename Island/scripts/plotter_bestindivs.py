@@ -10,12 +10,12 @@ u = 20
 if len(sys.argv) == 1:
     print "You can also give filename as a command line argument"
     filename = raw_input("Enter Filename: ")
-    fps = 1
+    fps = 5
 else:
     filename = sys.argv[1]
     fps = sys.argv[2]
 
-indivs = np.loadtxt(filename, dtype=float, comments='#', delimiter=', ', converters=None, skiprows=0, usecols=None, unpack=False, ndmin=0)
+indivs = np.genfromtxt(filename, dtype=float, comments='#', delimiter=', ')
 print indivs
 arity_x2 = len(indivs[0])
 
@@ -37,34 +37,22 @@ for i in range(0,len(imag_values)):
 fig = plt.figure()
 ax = plt.axes(xlim=(-1.5, 1.5), ylim=(-1.5, 1.5))
 points, = ax.plot([], [], 'bo')
-bestpoints, = ax.plot([], [], 'ro')
+bestpoints, = ax.plot([], [], 'bo')
 
-# initialization function: plot the background of each frame
-def init():
-    points.set_data([], [])
-    bestpoints.set_data([], [])
-    return points, bestpoints,
+#ax.figure()
 
-# animation function.  This is called sequentially
-def animate(i):
-    x = real_values[u*i+1:u*i+u,:]
-    y = imag_values[u*i+1:u*i+u,:]
-    xb = real_values[u*i,:]
-    yb = imag_values[u*i,:]
-    points.set_data(x, y)
-    bestpoints.set_data(xb, yb)
-    return points, bestpoints,
+i2 = len(indivs[:,0])/u
+xb = real_values[u*i2,:]
+yb = imag_values[u*i2,:]
 
-# call the animator.  blit=True means only re-draw the parts that have changed.
-print len(indivs[:,0])/10
-anim = animation.FuncAnimation(fig, animate, init_func=init,
-                               frames=len(indivs[:,0])/u, interval=400, blit=True)
+ax.plot(xb,yb, 'bo')
+
 
 # save the animation as an mp4.  This requires ffmpeg or mencoder to be
 # installed.  The extra_args ensure that the x264 codec is used, so that
 # the video can be embedded in html5.  You may need to adjust this for
 # your system: for more information, see
 # http://matplotlib.sourceforge.net/api/animation_api.html
-anim.save(filename + '_animation.mp4', fps=fps)
+
 
 plt.show()

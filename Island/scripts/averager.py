@@ -2,7 +2,7 @@ import matplotlib.pyplot as pyplot
 import numpy as np
 import sys
 
-numislands = 4
+numislands = 5
 if len(sys.argv) == 1:
     print "You can also give filename as a command line argument"
     runname = raw_input("Enter Run Name: ")
@@ -14,9 +14,9 @@ else:
 numruns = 10
 
 if isMean:
-	filename = runname + "/" + "r0" + "1" + "_mean.txt"
+	filename = runname + "/" + "r0" + "/" + "1" + "_mean.txt"
 else:
-	filename = runname + "/" + "r0" + "1" + "_bestfit.txt"
+	filename = runname + "/" + "r0" + "/" + "1" + "_bestfit.txt"
 	
 fitnesses = np.genfromtxt(filename,delimiter = ',',dtype=float)
 fitnesses = fitnesses[0:(len(fitnesses)-1)]
@@ -44,7 +44,7 @@ else:
 	np.savetxt("bestavgisland.txt", fitnesses, delimiter = ",")
 pyplot.figure()
 pyplot.plot(fitnesses.T)
-pyplot.xlim(0,len(fitnesses))
+pyplot.xlim(0,len(fitnesses[0]))
 pyplot.xlabel("Generation")
 pyplot.ylabel("Fitness")
 

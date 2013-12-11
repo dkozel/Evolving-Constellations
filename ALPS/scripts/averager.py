@@ -37,7 +37,7 @@ else:
 print fitnesses
 pyplot.figure()
 pyplot.plot(fitnesses.T)
-pyplot.xlim(0,len(fitnesses))
+pyplot.xlim(0,len(fitnesses[0]))
 pyplot.xlabel("Generation")
 pyplot.ylabel("Fitness")
 

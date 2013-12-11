@@ -44,6 +44,7 @@ else:
 	np.savetxt("bestavgisland.txt", fitnesses, delimiter = ",")
 pyplot.figure()
 pyplot.plot(fitnesses.T)
+pyplot.xlim(0,len(fitnesses))
 pyplot.xlabel("Generation")
 pyplot.ylabel("Fitness")
 

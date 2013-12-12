@@ -105,6 +105,8 @@ if __name__ == '__main__':
 		individual =  np.asarray(gnuradio.digital.constellation_8psk().points())
 	elif arity == 16:
 		individual =  np.asarray(gnuradio.digital.qam.qam_constellation().points())
+	else:
+		individual =  np.asarray(gnuradio.digital.qam.qam_constellation(arity).points())
 	fitness = 0
 	
 	for i in range(0,100):

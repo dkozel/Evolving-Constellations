@@ -2,7 +2,6 @@ import matplotlib.pyplot as pyplot
 import numpy as np
 import sys
 
-numislands = 4
 if len(sys.argv) == 1:
     print "You can also give filename as a command line argument"
     runname = raw_input("Enter Run Name: ")

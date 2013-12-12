@@ -19,7 +19,7 @@ else:
     runname = sys.argv[1]
     isMean = sys.argv[2]
 
-numruns = 10
+numruns = 6
 
 if isMean:
 	filename = runname + "/" + "r0" + "/" + "1" + "_mean.txt"

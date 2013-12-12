@@ -39,12 +39,10 @@ points, = ax.plot([], [], 'bo')
 bestpoints, = ax.plot([], [], 'bo')
 
 #ax.figure()
-
-i2 = len(indivs[:,0])/u
-xb = real_values[u*i2,:]
-yb = imag_values[u*i2,:]
-
-ax.plot(xb,yb, 'bo')
+i2 = len(indivs[:,0]) - u -1
+print i2-u
+xb = real_values[i2 ,:]
+yb = imag_values[i2,:]
 
 
 # save the animation as an mp4.  This requires ffmpeg or mencoder to be
@@ -52,6 +50,6 @@ ax.plot(xb,yb, 'bo')
 # the video can be embedded in html5.  You may need to adjust this for
 # your system: for more information, see
 # http://matplotlib.sourceforge.net/api/animation_api.html
-
+ax.plot(xb,yb, 'bo')
 
 plt.show()

@@ -19,7 +19,7 @@ else:
     runname = sys.argv[1]
     isMean = sys.argv[2]
 
-numruns = 6
+numruns = 10
 
 if isMean:
 	filename = runname + "/" + "r0" + "/" + "1" + "_mean.txt"
@@ -28,7 +28,7 @@ else:
 	
 fitnesses = np.genfromtxt(filename,delimiter = ',',dtype=float)
 fitnesses = fitnesses[0:(len(fitnesses)-1)]
-
+print np.nanmin(fitnesses)
 for i in range(1,numruns):
 	if isMean:
 		filename = runname + "/" + "r" + str(i) + "/1" + "_mean.txt"
@@ -37,8 +37,8 @@ for i in range(1,numruns):
 		
 	fitnesses2 = np.genfromtxt(filename,delimiter = ',',dtype=float)
 	fitnesses2 = fitnesses2[0:(len(fitnesses2)-1)]
+	print np.nanmin(fitnesses2)
 	fitnesses += fitnesses2
-	print i
 	
 fitnesses = fitnesses/numruns
 print len(fitnesses)

@@ -1,10 +1,20 @@
 import matplotlib.pyplot as pyplot
 import numpy as np
 import sys
+import Tkinter, tkFileDialog 
+import os.path 
 
 if len(sys.argv) == 1:
-    print "You can also give filename as a command line argument"
-    runname = raw_input("Enter Run Name: ")
+    print "You can also give filename as a command line argument."
+    print "Double-click on the directory of the run you want to analyze"
+    root = Tkinter.Tk()
+    root.withdraw()
+    full_path = tkFileDialog.askdirectory(initialdir="../")
+    print full_path
+    runname = os.path.split(full_path)[1]
+    rundir = os.path.split(full_path)[0]
+    print runname
+    #runname = raw_input("Enter Run Name: ")
     isMean = int(raw_input("Is it mean or best? 1 for mean and 0 for best: "))
 else:
     runname = sys.argv[1]
@@ -13,19 +23,23 @@ else:
 numruns = 10
 
 if isMean:
-	filename = runname + "/" + "r0" + "/" + runname + "_meanfit.txt"
+	filename = rundir +"/" + runname + "/" + "r0" + "/" + runname + "_meanfit.txt"
 else:
-	filename = runname + "/" + "r0" + "/" + runname + "_bestfit.txt"
+	filename = rundir +"/"+ runname + "/" + "r0" + "/" + runname + "_bestfit.txt"
 	
 fitnesses = np.genfromtxt(filename,delimiter = ',',dtype=float)
+print np.nanmin(fitnesses)
 
 for i in range(1,numruns):
 	if isMean:
-		filename = runname + "/" + "r" + str(i) + "/" + runname + "_meanfit.txt"
+		filename = rundir +"/" + runname + "/" + "r" + str(i) + "/" + runname + "_meanfit.txt"
 	else:
-		filename = runname + "/" + "r" + str(i) + "/" + runname + "_bestfit.txt"
+		filename = rundir +"/"+ runname + "/" + "r" + str(i) + "/" + runname + "_bestfit.txt"
 		
-	fitnesses += np.genfromtxt(filename,delimiter = ',',dtype=float)
+	new_fitnesses = np.genfromtxt(filename,delimiter = ',',dtype=float) 
+	print np.nanmin(new_fitnesses)
+	fitnesses += new_fitnesses
+	
 	
 fitnesses = fitnesses/numruns
 

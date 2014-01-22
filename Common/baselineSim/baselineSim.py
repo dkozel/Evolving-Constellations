@@ -2,6 +2,7 @@ from random import *
 import numpy as np
 import matplotlib.pyplot as pyplot
 import channel_model as gnuradio
+#import channel_model_nomulti as gnuradio
 import os
 
 #numgen = int(raw_input("Please enter the number of generations: "))
@@ -109,10 +110,11 @@ if __name__ == '__main__':
 		individual =  np.asarray(gnuradio.digital.qam.qam_constellation(arity).points())
 	fitness = 0
 	
-	for i in range(0,100):
-		fitness += fitnessfunction(individual)
-		
-	fitness = fitness/100
+	for i in range(0,10):
+		fitness_new = fitnessfunction(individual)
+		print fitness_new
+		fitness += fitness_new
+	fitness = fitness/10
 	print individual
 	print fitness
 	#print(newindiv)

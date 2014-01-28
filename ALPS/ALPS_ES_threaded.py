@@ -10,6 +10,7 @@ import os
 ############### Run Parameters ###########################
 numgen = int(raw_input("Please enter the number of generations: "))
 arity = int(raw_input("Please enter the arity of the constellation: "))
+noise_level = float(raw_input("Please enter the desired noise level: "))
 
 arity_x2 = arity*2
 
@@ -50,7 +51,7 @@ def fitnessfunction(individual):
 
 	tb = gnuradio.channel_model(constellation)
 
-	tb.set_noise_level(0.4)
+	tb.set_noise_level(noise_level)
 	tb.run()
 	#ber = beraw.BERAWGNSimu(5)
 	#ber.run()
@@ -114,7 +115,7 @@ def run(level,level_num,u,numtimesu,recomb,arity_x2):
 	stddevs = level[1]
 	age = level[2]
 	fitnesses = level[3]
-
+	count = 0
 
 	# Create initial matrix of new individuals, another matrix for their mutation rates, and their fitnesses.
 	# The reasoning behind this is to make the code expandable to individuals with varying chromosome lengths.
@@ -137,6 +138,7 @@ def run(level,level_num,u,numtimesu,recomb,arity_x2):
 		
 			# Store the fitness value for this new individual
 			newfitness[numtimesu*i+numtimes,0] = fitnessfunction(newindiv[numtimesu*i+numtimes,:])	
+			count += 1
 			
 			# Store the new age for the individual
 			newages[numtimesu*i+numtimes,0] = age[i] 
@@ -147,6 +149,7 @@ def run(level,level_num,u,numtimesu,recomb,arity_x2):
 		newindiv[numindiv*numtimesu+i,:] = child_and_age[0]
 		newstddevs[numindiv*numtimesu+i,:] = recombineStddev(stddevs,numindiv)
 		newfitness[numindiv*numtimesu+i,:] = fitnessfunction(newindiv[numindiv*numtimesu+i,:])		
+		count += 1
 		newages[numindiv*numtimesu+i,:] = child_and_age[1] 
 
 	# Save the elites from the previous level
@@ -155,6 +158,7 @@ def run(level,level_num,u,numtimesu,recomb,arity_x2):
 		newindiv[numindiv*numtimesu+recomb+i,:] = indiv[i,:]
 		newstddevs[numindiv*numtimesu+recomb+i,:] = stddevs[i]
 		newfitness[numindiv*numtimesu+recomb+i,:] = fitnessfunction(indiv[i,:])	
+		count += 1
 		newages[numindiv*numtimesu+recomb+i,:] = age[i]
 
 	# Sort the matrix and the standard deviation vector based on the fitness
@@ -187,7 +191,7 @@ def run(level,level_num,u,numtimesu,recomb,arity_x2):
 	newlevel[3] = fitness
 
 	#print age
-	return newlevel
+	return (newlevel,count)
 
 # Move individuals up a level if they are too old
 def sortLevels(levels):
@@ -227,10 +231,10 @@ def sortLevels(levels):
 	
 	return levels
 
-def run_process(level,level_num,u,numtimesu,recomb,arity_x2,new_level):
-	new_level[level_num] = run(level,level_num,u,numtimesu,recomb,arity_x2)
-	print new_level[level_num]
-	return
+#def run_process(level,level_num,u,numtimesu,recomb,arity_x2,new_level):
+#	new_level[level_num],count = run(level,level_num,u,numtimesu,recomb,arity_x2)
+#	print new_level[level_num]
+#	return count
 
 class RunProcess(multip.Process):
 	def __init__(self,level,level_num,u,numtimesu,recomb,arity_x2,queue):
@@ -245,8 +249,8 @@ class RunProcess(multip.Process):
 		self.queue = queue
 	
 	def run(self):
-		self.newlevel = run(self.level,self.level_num,self.u,self.numtimesu,self.recomb,self.arity_x2)
-		self.queue.put([self.level_num,self.newlevel])
+		self.newlevel,self.count = run(self.level,self.level_num,self.u,self.numtimesu,self.recomb,self.arity_x2)
+		self.queue.put([self.level_num,self.newlevel,self.count])
 		#print self.newlevel
 	def getLevelNum(self):
 		return self.level_num
@@ -300,6 +304,7 @@ if __name__ == '__main__':
 	
 	runname = "ALPS_arity" +str(arity) + "_" + str(numgen) +"g" + str(raw_input("Please enter anything else you would like in the name: "))
 	numruns = int(raw_input("Please enter the number of runs: "))
+	replace_freq = int(raw_input("How many generations should the bottom be replaced? Min = " + str(agelevels[0]) + ": "))
 	
 	for numrun in range(0, numruns):
 		rundir = runname + '/r' +str(numrun) + '/'
@@ -313,7 +318,7 @@ if __name__ == '__main__':
 		meanfitnesses[:] = np.NAN
 		bestfitnesses = np.empty((len(agelevels),numgen),dtype='object')
 		bestfitnesses[:] = np.NAN
-		
+		totalCounter = 0
 		# Initialize vector of levels
 		levels = np.empty((len(agelevels)),dtype='object')
 
@@ -347,6 +352,7 @@ if __name__ == '__main__':
 			while queue.empty()==False:
 				msg = queue.get()
 				levels[msg[0]] = msg[1] 
+				totalCounter += msg[2]
 					
 			levels = sortLevels(levels)
 			#debugPrint(levels)
@@ -358,16 +364,18 @@ if __name__ == '__main__':
 					bestfitnesses[l,gen] = levels[l][3][0]
 					saveIndiv(levels[l][0],l)
 			
-			if gen%4 == 0 and len(agelevels) > 1:
+			if gen%replace_freq == 0 and len(agelevels) > 1:
 				indiv = randomUniformPolar(1,(u,arity_x2))
 				stddevs = np.random.normal(mean,stddev,u)
 				ages = 1*np.ones(u)
 				levels[0][0] = indiv
 				levels[0][1] = stddevs
 				levels[0][2] = ages
-
+		
 		writeToFile(levels,meanfitnesses,bestfitnesses,seed)
 		print meanfitnesses
+		print totalCounter
+		
 	
 
 	#plotbest(levels[len(levels)-2][0])

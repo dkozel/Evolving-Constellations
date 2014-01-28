@@ -19,20 +19,23 @@ indivs = np.loadtxt(filename, dtype=float, comments='#', delimiter=', ', convert
 print indivs
 arity_x2 = len(indivs[0])
 
-imag_values = indivs[:,range(0,arity_x2,2)]
-real_values = indivs[:,range(1,arity_x2,2)]
+imag_values = indivs[:,range(1,arity_x2,2)]
+real_values = indivs[:,range(0,arity_x2,2)]
 print imag_values
 
 # Normalize the points such that the average norm is 1. This is done in GNURadio as well, so it is a realistic depiction. 
 
 for i in range(0,len(imag_values)):
-	normfactor = np.mean(np.linalg.norm([imag_values[i,:],real_values[i,:]]))
+	normfactor = 0
+	for x in range(0,arity_x2/2):
+		normfactor += np.linalg.norm([imag_values[i,x],real_values[i,x]])
+	normfactor = normfactor/(arity_x2/2)
 	imag_values[i] = imag_values[i]/normfactor
 	real_values[i] = real_values[i]/normfactor
 
 # First set up the figure, the axis, and the plot element we want to animate
 fig = plt.figure()
-ax = plt.axes(xlim=(-1, 1), ylim=(-1, 1))
+ax = plt.axes(xlim=(-1.5, 1.5), ylim=(-1.5, 1.5))
 points, = ax.plot([], [], 'bo')
 bestpoints, = ax.plot([], [], 'ro')
 

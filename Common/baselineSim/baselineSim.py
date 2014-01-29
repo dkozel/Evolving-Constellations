@@ -70,7 +70,10 @@ def plotindiv(indiv):
 	xb = real_values
 	yb = imag_values
 	fig = pyplot.figure()
-	ax = pyplot.axes(xlim=(-1.5, 1.5), ylim=(-1.5, 1.5))
+	if len(xb) >= 8:
+		ax = pyplot.axes(xlim=(-2.5, 2.5), ylim=(-2.5, 2.5))
+	else:
+		ax = pyplot.axes(xlim=(-1.5, 1.5), ylim=(-1.5, 1.5))
 	ax.plot(xb,yb, 'bo')
 	pyplot.show()
 		

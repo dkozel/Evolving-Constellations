@@ -3,14 +3,19 @@ import matplotlib
 # matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 from matplotlib import animation
+import Tkinter, tkFileDialog 
 import sys
 
 u = 20
 
 if len(sys.argv) == 1:
-    print "You can also give filename as a command line argument"
-    filename = raw_input("Enter Filename: ")
-    fps = 1
+    print "You can also give filename as a command line argument."
+    print "Double-click on the file you want to analyze"
+    root = Tkinter.Tk()
+    root.withdraw()
+    full_path = tkFileDialog.askopenfilename(initialdir="../")
+    filename = full_path
+    #runname = raw_input("Enter Run Name: ")
 else:
     filename = sys.argv[1]
 
@@ -34,7 +39,10 @@ for i in range(0,len(imag_values)):
 
 # First set up the figure, the axis, and the plot element we want to animate
 fig = plt.figure()
-ax = plt.axes(xlim=(-2.5, 2.5), ylim=(-2.5, 2.5))
+if len(imag_values[1]) >= 8:
+	ax = plt.axes(xlim=(-2.5, 2.5), ylim=(-2.5, 2.5))
+else:
+	ax = plt.axes(xlim=(-1.5, 1.5), ylim=(-1.5, 1.5))
 points, = ax.plot([], [], 'bo')
 bestpoints, = ax.plot([], [], 'bo')
 

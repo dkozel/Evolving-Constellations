@@ -15,3 +15,6 @@ Thumbs.db
 # Editor backup files #
 #######################
 *~
+
+# Data Files #
+*.txt

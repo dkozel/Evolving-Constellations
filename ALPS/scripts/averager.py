@@ -29,7 +29,8 @@ else:
 	
 fitnesses = np.genfromtxt(filename,delimiter = ',',dtype=float)
 print np.nanmin(fitnesses)
-
+globalMinFitness = np.nanmin(fitnesses)
+globalMinRun = 0
 for i in range(1,numruns):
 	if isMean:
 		filename = rundir +"/" + runname + "/" + "r" + str(i) + "/" + runname + "_meanfit.txt"
@@ -37,22 +38,33 @@ for i in range(1,numruns):
 		filename = rundir +"/"+ runname + "/" + "r" + str(i) + "/" + runname + "_bestfit.txt"
 		
 	new_fitnesses = np.genfromtxt(filename,delimiter = ',',dtype=float) 
-	print np.nanmin(new_fitnesses)
+	minfitness = np.nanmin(new_fitnesses)
+	if minfitness < globalMinFitness:
+		globalMinFitness = minfitness
+		globalMinRun = i
 	fitnesses += new_fitnesses
+	print minfitness
 	
-	
+print "The best run is " + str(globalMinRun)
 fitnesses = fitnesses/numruns
 
 if isMean:
 	np.savetxt("meanavgES.txt", fitnesses, delimiter = ",")
 else:
 	np.savetxt("bestavgES.txt", fitnesses, delimiter = ",")
-print fitnesses
+#print fitnesses
 pyplot.figure()
-pyplot.plot(fitnesses.T)
+totalPlot = pyplot.plot(fitnesses.T)
 pyplot.xlim(0,len(fitnesses[0]))
 pyplot.xlabel("Generation")
 pyplot.ylabel("Fitness")
+numberPlots = len(totalPlot)
+legends = []
+for i in range (0, numberPlots):
+	 legends.append('Level ' + str(i +1))
+	
+if len(legends) > 1:
+	pyplot.legend(totalPlot, legends, prop={'size':12})
 
 if isMean:
 	pyplot.title("Mean Fitness vs. Gen")

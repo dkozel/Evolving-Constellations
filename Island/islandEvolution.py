@@ -30,7 +30,7 @@ class IslandEvolution(object):
       self.runEpochNum = epochNum
       self.migrantCount = migrantCount
       self.runElites = elites
-
+	
       self.logInfo()
 
       islands = [self.stdPopInit(popSize, 0, 1, arity) for _ in range(0, self.islandCount)]

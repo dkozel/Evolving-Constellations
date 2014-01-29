@@ -20,6 +20,7 @@ class IslandEvolution(object):
       self.meanFile = ""
       self.islandFiles = []
       self.migrantCount = 0
+      self.fitnessCounter = 0
 
     # Computes a single run with a given population size and an epoch of a given number of generations
     def evolve(self, popSize, epochNum, genMax, arity, migrantCount, elites):
@@ -53,6 +54,7 @@ class IslandEvolution(object):
 
         self.logData(islands)
 
+      self.logFile.write("Number of Fitness Evaluations = %s\n" % self.fitnessCounter)
       self.logFile.close()
       self.meanFile.close()
       for iFile in self.islandFiles:
@@ -145,6 +147,8 @@ class IslandEvolution(object):
         tb = gnuradio.channel_model(constellation)
         tb.set_noise_level(0.4)
         tb.run()
+        
+        self.fitnessCounter += 1
 
         error_rate = np.mean(tb.blocks_vector_sink_x_1.data())
         indiv.fitness = error_rate

@@ -116,7 +116,8 @@ class IslandEvolution(object):
       children = []
       learningRate = 1.0/np.sqrt(gen+1)
       children.extend(sorted(population, key=lambda x: x.fitness)[:elites])
-      for index in range(0, self.runPopSize*5-elites):
+
+      for index in range(0, self.runPopSize*5):
         parentIndex = np.random.randint(0,len(population))
         parent = population[parentIndex]
         

@@ -289,7 +289,7 @@ def writeToFile(levels,meanfitnesses,bestfitnesses,seed):
 	fo.write(str(recomb) + "\n")
 	fo.write("Age Levels =" + str(agelevels) + "\n")
 	fo.write(str(levels) + "\n")
-	fo.write("sSeed = " + str(seed) + "\n")
+	fo.write("Seed = " + str(seed) + "\n")
 	
 	np.savetxt(rundir + runname + "_meanfit.txt", meanfitnesses, fmt='%.18e', delimiter=',', newline='\n', header='', footer='', comments='# ')
 	np.savetxt(rundir + runname + "_bestfit.txt", bestfitnesses, fmt='%.18e', delimiter=',', newline='\n', header='', footer='', comments='# ')

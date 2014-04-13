@@ -16,6 +16,8 @@ arity_x2 = arity*2
 mean = 0
 stddev = 1
 
+elites = 3
+
 u = 20
 
 # Number of times to do mutation on each individual
@@ -136,20 +138,35 @@ if __name__ == '__main__':
 		
 		#indiv = np.random.normal(mean,stddev,(u,arity_x2))
 		indiv = randomUniformPolar(1 , (u,arity_x2))
-		print indiv
+		#print indiv
 		stddevs = np.random.normal(stddev,stddev,u)
+		initialfitnesses = np.zeros((u,1), dtype=float)
+		for i in range(0,u):
+			initialfitnesses[i] = fitnessfunction(indiv[i,:])
+		
+		#print(initialfitnesses)
+		#print(indiv)
+		#print(initialfitnesses[:,0].argsort())
+			
+		# Arrange the initial population based on their initial fitnesses
+		indiv=indiv[initialfitnesses[:,0].argsort()]
+		stddevs=stddevs[initialfitnesses[:,0].argsort()]
+		
+		#print(indiv)
+		#print(initialfitnesses)
 		
 		# Arrays for recording mean, best, and best individual vs. generation
 		meanfitnesses = np.empty(numgen,dtype='float')
 		bestfitnesses = np.empty(numgen,dtype='float')
 		bestindivs = np.empty((numgen,arity_x2),dtype='float')
 		
+		
 		for x in range(0, numgen):
 			# Create initial matrix of new individuals, another matrix for their mutation rates, and their fitnesses.
 			# The reasoning behind this is to make the code expandable to individuals with varying chromosome lengths.
-			newindiv = np.zeros((u*numtimesu+recomb,arity_x2), dtype=float)
-			newstddevs = np.zeros((u*numtimesu+recomb,1), dtype=float)
-			newfitness = np.zeros((u*numtimesu+recomb,1), dtype=float)
+			newindiv = np.zeros((u*numtimesu+recomb+elites,arity_x2), dtype=float)
+			newstddevs = np.zeros((u*numtimesu+recomb+elites,1), dtype=float)
+			newfitness = np.zeros((u*numtimesu+recomb+elites,1), dtype=float)
 
 			# Mutation
 			for i in range(0,u):	
@@ -170,7 +187,12 @@ if __name__ == '__main__':
 				newstddevs[u*numtimesu+i,:] = recombineStddev(stddevs)
 				newfitness[u*numtimesu+i,:] = fitnessfunction(newindiv[u*numtimesu+i,:])		
 				
-
+			# Select some elites 
+			for j in range(0,elites):
+				newindiv[u*numtimesu+(recomb)+j,:] = indiv[j,:]
+				newstddevs[u*numtimesu+(recomb)+j,:] = stddevs[j]
+				newfitness[u*numtimesu+(recomb)+j,:] = fitnessfunction(newindiv[u*numtimesu+(recomb)+j,:])
+					
 			# Sort the matrix and the standard deviation vector based on the fitness
 			newindiv=newindiv[newfitness[:,0].argsort()]
 			newstddevs=newstddevs[newfitness[:,0].argsort()]
@@ -183,6 +205,8 @@ if __name__ == '__main__':
 			stddevs = newstddevs[0:u,0]
 
 			fitnesses = newfitness
+			
+			#print(fitnesses)
 
 			meanfitnesses[x]= np.mean(fitnesses)
 			bestfitnesses[x] = fitnesses[0,0]

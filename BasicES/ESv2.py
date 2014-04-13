@@ -7,6 +7,7 @@ import os
 numgen = int(raw_input("Please enter the number of generations: "))
 arity = int(raw_input("Please enter the arity of the constellation: "))
 noise_level = float(raw_input("Please enter the desired noise level: "))
+elites = int(raw_input("Please enter the number of elites: "))
 
 arity_x2 = arity*2
 #runname = "ES_" + str(raw_input("Please enter the name of run: "))
@@ -16,7 +17,7 @@ arity_x2 = arity*2
 mean = 0
 stddev = 1
 
-elites = 3
+#elites = 3
 
 u = 20
 
@@ -132,6 +133,7 @@ if __name__ == '__main__':
 	numruns = int(raw_input("Please enter the number of runs: "))
 	
 	for numrun in range(0, numruns):
+		print "Beginning run ", numrun
 		seed = numrun
 		rundir = runname + '/r' +str(numrun) + '/'
 		np.random.seed(seed)
@@ -162,6 +164,8 @@ if __name__ == '__main__':
 		
 		
 		for x in range(0, numgen):
+			
+			print "beginning generation ", x
 			# Create initial matrix of new individuals, another matrix for their mutation rates, and their fitnesses.
 			# The reasoning behind this is to make the code expandable to individuals with varying chromosome lengths.
 			newindiv = np.zeros((u*numtimesu+recomb+elites,arity_x2), dtype=float)

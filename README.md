@@ -7,7 +7,9 @@ Each folder contains the algorithm that is specified in the folder, along with t
 The evolutionary code is written in Python and uses Numpy, Scipy, and Matplotlib. The simulation is built on GNU Radio 3.7, and requires that to be installed to run. The movie maker scripts require ffmpeg.
 
 ### License
- 
+
+We request that any academic work making use of the code include a citation to the paper: [Evolution of digital modulation schemes for radio systems](http://dl.acm.org/citation.cfm?id=2598449)
+
 Copyright 2015 Ervin Teng and Derek Kozel
 
 Licensed under the Apache License, Version 2.0 (the "License");
